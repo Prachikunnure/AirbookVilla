@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const WrapAsync = require("../utils/WrapAsync.js");
 const ExpressError = require("../utils/ExtendsError.js");
-const { listingSchema, reviewSchema } = require("../schema.js");
+const { listingSchema, reviewSchema,bookingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
 const{isLoggedin}=require("../middleware.js");
 const{isOwner,validateListing}=require("../middleware.js");
-
+const booking=require("../models/booking.js")
 const multer  = require('multer');
 const {storage}=require("../cloudConfig.js");
 

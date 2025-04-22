@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Review= require("./review.js");
-
+const booking=require("./booking.js")
 const listingSchema = new Schema({
   title: {
     type: String,
@@ -20,7 +20,7 @@ const listingSchema = new Schema({
   price: Number,
   location: String,
   country: String,
-  reviews:[//we added review model in the listing
+  reviews:[
     {
       type:Schema.Types.ObjectId,
       ref:"Review"
@@ -29,7 +29,13 @@ const listingSchema = new Schema({
   owner:{
   type:Schema.Types.ObjectId,
   ref:"User"
-  }
+  },
+  booking: [
+    {
+        type: Schema.Types.ObjectId,
+        ref: "booking"
+    }
+]
 });
 
 // this is case for when we delete the listing then it should delete its corresp reviews as well
@@ -40,6 +46,13 @@ listingSchema.post("findOneAndDelete",async(listing)=>
   await Review.deleteMany({_id : {$in: listing.reviews}});//_id is id of listing which we delete
 }  
 });
+
+listingSchema.post("findOneAndDelete",async(listing)=>
+  {if(listing)
+  {
+    await booking.deleteMany({_id : {$in: listing.booking}});//_id is id of listing which we delete
+  }  
+  });
 
 const Listing = mongoose.model("Listing", listingSchema);
 module.exports = Listing;

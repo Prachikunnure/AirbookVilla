@@ -8,7 +8,6 @@ module.exports.index = async (req, res) => {
 };
 // new listing
 module.exports.renderNewForm= (req, res) => {
-    // console.log(req.user);//when go to cretae new listing for that check below when user enter then it prints user that has loged in
     res.render("listings/new.ejs");
 }
 // show listing
@@ -20,13 +19,13 @@ module.exports.showListing=async (req, res) => {
         populate:{
             path:"author"
         },
-    }).populate("owner");//it will come with listing info with reviews with populate.first check on console.by print
+    }).populate("owner");
    if(!listing)
    {
     req.flash("error","Listing does not found");
     res.redirect("/listing");
    }
-//    console.log(listing);    
+   console.log("with population",listing);    
     res.render("listings/show.ejs", { listing });
 
 };
@@ -35,15 +34,15 @@ module.exports.showListing=async (req, res) => {
 module.exports.createRoute=async (req, res, next) => {
     console.log("Posted");
     let url= req.file.path;
-    let filename= req.file.filename;//extracting url and filename from file
-    console.log(url,"...",filename);//when we change in the model image then created data will be with url and filename for that 
+    let filename= req.file.filename;
+    console.log(url,"...",filename);
    const newListing = new Listing(req.body.listing);
   
-   newListing.owner= req.user._id;//user with which we are login is considered as req.user thatt is default
-   newListing.image={url,filename};//when we upload the listing then we will add  one url and one filename
+   newListing.owner= req.user._id;
+   newListing.image={url,filename};
     await newListing.save();
     console.log(newListing);
-    req.flash("success","New listing Created");//when we post new created listing
+    req.flash("success","New listing Created");
     res.redirect("/listing");
     };
 // edit the route
@@ -67,8 +66,7 @@ module.exports.editRoute=async (req, res) => {
 module.exports.updateRoute=async (req, res) => {
     let { id } = req.params;
     let listing=await Listing.findByIdAndUpdate(id, {...req.body.listing})
-   if(typeof req.file!=="undefined"){//whwn we dont upload any file 
-   //we will extract file path and filename of updated list
+   if(typeof req.file!=="undefined"){
     let url= req.file.path;
     let filename= req.file.filename;
     listing.image={url,filename};
@@ -76,11 +74,11 @@ module.exports.updateRoute=async (req, res) => {
     }
     // await updatedData.save();
     req.flash("success","current listing updated");
-    res.redirect(`/listing/${id}`);//redirecting to the details by id
+    res.redirect(`/listing/${id}`);
 
 }
 // Delete The route
-module.exports.deleteroute=async (req, res) =>//check its middleware in listing model
+module.exports.deleteroute=async (req, res) =>
 {
     let { id } = req.params;
     let deletedList = await Listing.findByIdAndDelete(id);

@@ -1,8 +1,8 @@
 const Listing = require("./models/listing.js");
 const Review = require("./models/review.js");
-
+const booking=require("./models/booking.js")
 const ExpressError = require("./utils/ExtendsError.js");
-const { listingSchema, reviewSchema } = require("./schema.js");
+const { listingSchema, reviewSchema ,bookingSchema} = require("./schema.js");
 
 //when user want create update delete the lising before he must be logged in for that  creating function and passing as middleware 
 module.exports.isLoggedin=(req,res,next)=>{
@@ -41,9 +41,7 @@ module.exports.isOwner=async(req,res,next)=>
             next();
 }
 
-// when we use listing related crud operation then validateListing
-// validation as middleware server side error means will check whether all credentials are enetred well
-// in joi references in case of sending it from hopscotch
+
 module.exports.validateListing = (req, res, next) => {
     let { error } = listingSchema.validate(req.body);//listingschema is we importes then validate is its fun
     if (error) {
@@ -54,6 +52,17 @@ module.exports.validateListing = (req, res, next) => {
         next();
     }
 
+};
+
+module.exports.validatebooking = (req, res, next) => {
+    let { error } = bookingSchema.validate(req.body);//listingschema is we importes then validate is its fun
+    if (error) {
+        console.log("booking")
+        let errMsg = error.details.map((ele) => ele.message).join(",");
+        throw new ExpressError(400, errMsg);
+    } else {
+        next();
+    }
 };
 
 

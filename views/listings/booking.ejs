@@ -1,0 +1,22 @@
+
+    <% layout("/layouts/boilerPlate") %>
+<div class="row mt-3">
+    <div class="col-4 offset-2"></div>
+<h3>Book Your Listing</h3>
+<form method="POST" action="/listing/<%= listing._id %>"
+enctype="multipart/form-data"
+ novalidate class="needs-validation">
+   
+   <div class="mb-3">
+       <label for="Date"class="form-label">Booking Date</label>
+       <input type="Date" name="booking[bookingDate]"value="<%=booking.bookingDate%>" class="form-control" required>
+       <div class="invalid-feedback"></div>
+   </div>
+   <div class="mb-3">
+       <label for="description"class="form-label">Duration</label>
+       <textarea name="booking[duration]" class="form-control"required><%= booking.duration%></textarea>
+       <div class="invalid-feedback">please enter no of nights you want to stay</div>
+   </div>
+   <button>Book  Now</button>
+</form>
+</div>
